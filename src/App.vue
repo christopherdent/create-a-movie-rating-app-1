@@ -1,18 +1,27 @@
 <script setup>
 import { items } from "./movies.json";
-import { computed } from "vue";
+import { computed, ref } from "vue";
 
 /*
  This is an Icon that you can use to represent the stars if you like
  otherwise you could just use a simple ⭐️ emoji, or * character.
 */
-import { StarIcon } from "@heroicons/vue/24/solid";
+// import { StarIcon } from "@heroicons/vue/24/solid";
+import StarIcon from './StarIcon.vue';
 
-//  const getStarCount = (movie) => {
-//     return Math.round(movie.rating);
-//  }
+
+const setRating = (clicked) => {
+  currentRating = clicked ? currentRating + 1 : currentRating - 1;
+};
+
+let currentRating = ref(0);
+
 
 //  Computed
+
+const applyClassToAllStars = computed(() => {
+  return currentRating.value === 5;
+});
 
 const getStarCount = (movie) => {
   return Math.round(movie.rating);
@@ -56,11 +65,24 @@ const handleImageError = (event) => {
 
 
         <div class="flex items-center justify-between">
-          <span class="m-6">Rating: [{{ getStarCount(item) }} / 5]</span>
+
+
+         <span class="m-6">Rating: <br>[{{ getStarCount(item) }} / 5]</span>
           <div class="flex space-x-1 m-6">
-            <StarIcon v-for="n in getStarCount(item)"
-                      class="h-5 w-5 text-yellow-400" />
-          </div>
+
+
+        <StarIcon
+          v-for="index in 5"
+          :key="index"
+          :clicked="index <= currentRating"
+          :index="index"
+          @toggle="setRating"
+          class="star-button"
+          :class="{ 'class-for-all-stars': applyClassToAllStars }"
+        />
+
+
+      </div> 
         </div>
       </div>
 
